@@ -5,45 +5,6 @@ import colorSchemes from './colorSchemes'
 
 const defaultColorScheme = 'maeditor'
 
-MSA.propTypes = {
-  rowHeight: PropTypes.number,
-  nameFontSize: PropTypes.number,
-  width: PropTypes.string,
-  height: PropTypes.number,
-  treeWidth: PropTypes.number,
-  nameWidth: PropTypes.number,
-  branchStrokeStyle: PropTypes.string,
-  nodeHandleRadius: PropTypes.number,
-  nodeHandleFillStyle: PropTypes.string,
-  collapsedNodeHandleFillStyle: PropTypes.string,
-  rowConnectorDash: PropTypes.any,
-  handler: PropTypes.object,
-  colorScheme: PropTypes.string,
-  scrollTop: PropTypes.number,
-  collapsed: PropTypes.shape({}),
-  rowData: PropTypes.shape({}).isRequired,
-  branches: PropTypes.any.isRequired,
-  root: PropTypes.string.isRequired,
-}
-
-MSA.defaultProps = {
-  rowHeight: 24,
-  nameFontSize: 12,
-  width: '',
-  height: null,
-  treeWidth: 200,
-  nameWidth: 200,
-  branchStrokeStyle: 'black',
-  nodeHandleRadius: 4,
-  nodeHandleFillStyle: 'white',
-  collapsedNodeHandleFillStyle: 'black',
-  rowConnectorDash: [2, 2],
-  handler: {},
-  colorScheme: defaultColorScheme,
-  scrollTop: 0,
-  collapsed: {},
-}
-
 TreeCanvas.propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
@@ -225,28 +186,44 @@ function MSARows({
   )
 }
 
-function MSA(props) {
-  // opts.branches is a list of [parent,child,length]
-  // opts.rowData is a map of seqname->row
-  // All nodes MUST be uniquely named!
-  const {
-    root,
-    branches,
-    rowData,
-    collapsed,
-    rowHeight: genericRowHeight,
-    nameFontSize,
-    width: containerWidth,
-    height: propContainerHeight,
-    treeWidth,
-    nameWidth,
-    nodeHandleFillStyle,
-    nodeHandleRadius,
-    handler,
-    colorScheme: colorSchemeName,
-    branchStrokeStyle,
-    scrollTop,
-  } = props // mandatory arguments
+MSA.propTypes = {
+  rowHeight: PropTypes.number,
+  nameFontSize: PropTypes.number,
+  width: PropTypes.string,
+  height: PropTypes.number,
+  treeWidth: PropTypes.number,
+  nameWidth: PropTypes.number,
+  branchStrokeStyle: PropTypes.string,
+  nodeHandleRadius: PropTypes.number,
+  nodeHandleFillStyle: PropTypes.string,
+  collapsedNodeHandleFillStyle: PropTypes.string,
+  rowConnectorDash: PropTypes.any,
+  handler: PropTypes.object,
+  colorScheme: PropTypes.string,
+  scrollTop: PropTypes.number,
+  collapsed: PropTypes.shape({}),
+  rowData: PropTypes.shape({}).isRequired,
+  branches: PropTypes.any.isRequired,
+  root: PropTypes.string.isRequired,
+}
+
+function MSA({
+  rowHeight: genericRowHeight = 24,
+  nameFontSize = 12,
+  width: containerWidth = '',
+  height: propContainerHeight = null,
+  treeWidth = 200,
+  nameWidth = 200,
+  branchStrokeStyle = 'black',
+  nodeHandleRadius = 4,
+  nodeHandleFillStyle = 'white',
+  colorScheme: colorSchemeName = defaultColorScheme,
+  collapsed = {},
+  scrollTop = 0,
+  root,
+  branches,
+  rowData,
+}) {
   const colorScheme = colorSchemes[colorSchemeName]
   let containerHeight = propContainerHeight
 
@@ -325,83 +302,6 @@ function MSA(props) {
   treeHeight += scrollbarHeight
   containerHeight = containerHeight || treeHeight + 'px'
 
-  // ctx.strokeStyle = branchStrokeStyle
-  // ctx.setLineDash([])
-  // nodesWithHandles.forEach(node => {
-  //   makeNodeHandlePath(node)
-  //   if (collapsed[node]) ctx.fillStyle = collapsedNodeHandleFillStyle
-  //   else {
-  //     ctx.fillStyle = nodeHandleFillStyle
-  //     ctx.stroke()
-  //   }
-  //   ctx.fill()
-  // })
-  // const canvasRect = treeCanvas.getBoundingClientRect(),
-  //   canvasOffset = {
-  //     top: canvasRect.top + document.body.scrollTop,
-  //     left: canvasRect.left + document.body.scrollLeft,
-  //   }
-
-  // treeCanvas.addEventListener('click', evt => {
-  //   evt.preventDefault()
-  //   const mouseX = parseInt(evt.clientX - canvasOffset.left)
-  //   const mouseY = parseInt(
-  //     evt.clientY - canvasOffset.top + container.scrollTop
-  //   )
-  //   let clickedNode = null
-  //   nodesWithHandles.forEach(node => {
-  //     makeNodeHandlePath(node)
-  //     if (ctx.isPointInPath(mouseX, mouseY)) clickedNode = node
-  //   })
-  //   if (clickedNode && handler.nodeClicked) handler.nodeClicked(clickedNode)
-  // })
-
-  // let startX, scrollLeft, rowsDivMouseDown
-  // rowsDiv.addEventListener('mousedown', e => {
-  //   rowsDivMouseDown = true
-  //   rowsDiv.classList.add('active')
-  //   startX = e.pageX - rowsDiv.offsetLeft
-  //   scrollLeft = rowsDiv.scrollLeft
-  // })
-  // rowsDiv.addEventListener('mouseleave', () => {
-  //   rowsDivMouseDown = false
-  //   rowsDiv.classList.remove('active')
-  // })
-  // rowsDiv.addEventListener('mouseup', () => {
-  //   rowsDivMouseDown = false
-  //   rowsDiv.classList.remove('active')
-  // })
-  // rowsDiv.addEventListener('mousemove', e => {
-  //   if (!rowsDivMouseDown) return
-  //   e.preventDefault()
-  //   const x = e.pageX - rowsDiv.offsetLeft
-  //   const walk = x - startX
-  //   rowsDiv.scrollLeft = scrollLeft - walk
-  // })
-
-  // let startY, containerMouseDown
-  // if (typeof scrollTop !== 'undefined') container.scrollTop = scrollTop
-  // container.addEventListener('mousedown', e => {
-  //   containerMouseDown = true
-  //   container.classList.add('active')
-  //   startY = e.pageY - container.offsetTop
-  //   scrollTop = container.scrollTop
-  // })
-  // container.addEventListener('mouseleave', () => {
-  //   containerMouseDown = false
-  //   container.classList.remove('active')
-  // })
-  // container.addEventListener('mouseup', () => {
-  //   containerMouseDown = false
-  //   container.classList.remove('active')
-  // })
-  // container.addEventListener('mousemove', e => {
-  //   if (!containerMouseDown) return
-  //   e.preventDefault()
-  //   const y = e.pageY - container.offsetTop
-  //   const walk = y - startY
-  //   container.scrollTop = scrollTop - walk
-  // })
   return (
     <div
       style={{
