@@ -42,12 +42,6 @@ function TreeCanvas({
       ctx.lineWidth = treeStrokeWidth
       nodes.forEach(node => {
         if (!ancestorCollapsed[node]) {
-          // const rh = rowHeight[node]
-          // if (rh) {
-          //   let nameSpan = create('span', nameDiv)
-          //   nameSpan.innerText = node
-          // }
-
           if (!nodeChildren[node].length) {
             ctx.setLineDash([])
             ctx.beginPath()
