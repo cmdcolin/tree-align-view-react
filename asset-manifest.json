@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/tree-align-view-react/static/css/main.e621d2da.chunk.css",
+    "main.js": "/tree-align-view-react/static/js/main.f24d5742.chunk.js",
+    "main.js.map": "/tree-align-view-react/static/js/main.f24d5742.chunk.js.map",
+    "runtime-main.js": "/tree-align-view-react/static/js/runtime-main.a41c579a.js",
+    "runtime-main.js.map": "/tree-align-view-react/static/js/runtime-main.a41c579a.js.map",
+    "static/js/2.aec75ad2.chunk.js": "/tree-align-view-react/static/js/2.aec75ad2.chunk.js",
+    "static/js/2.aec75ad2.chunk.js.map": "/tree-align-view-react/static/js/2.aec75ad2.chunk.js.map",
+    "index.html": "/tree-align-view-react/index.html",
+    "precache-manifest.5498b82eb79acfadc21f79c3b2d10eac.js": "/tree-align-view-react/precache-manifest.5498b82eb79acfadc21f79c3b2d10eac.js",
+    "service-worker.js": "/tree-align-view-react/service-worker.js",
+    "static/css/main.e621d2da.chunk.css.map": "/tree-align-view-react/static/css/main.e621d2da.chunk.css.map",
+    "static/js/2.aec75ad2.chunk.js.LICENSE.txt": "/tree-align-view-react/static/js/2.aec75ad2.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a41c579a.js",
+    "static/js/2.aec75ad2.chunk.js",
+    "static/css/main.e621d2da.chunk.css",
+    "static/js/main.f24d5742.chunk.js"
+  ]
+}
