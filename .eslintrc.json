@@ -4,12 +4,17 @@
     "react"
   ],
   "extends": [
+    "airbnb",
+    "react-app",
     "prettier",
     "eslint:recommended",
     "plugin:react/recommended"
   ],
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "curly": "error",
+    "react/require-default-props": 0,
+    "react/jsx-filename-extension": 0
   },
   "settings": {
     "react": {
