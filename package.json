@@ -11,6 +11,7 @@
     "react-dom": "^16.13.0",
     "react-scripts": "3.4.0",
     "react-sizeme": "^2.6.12",
+    "react-virtualized-auto-sizer": "^1.0.2",
     "react-window": "^1.8.5"
   },
   "env": {

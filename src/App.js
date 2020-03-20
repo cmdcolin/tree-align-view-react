@@ -3,7 +3,7 @@ import React, { useState, useRef, useCallback, useEffect } from 'react'
 import './App.css'
 import PropTypes from 'prop-types'
 import { FixedSizeList as List } from 'react-window'
-import { withSize } from 'react-sizeme'
+import Autosizer from 'react-virtualized-auto-sizer'
 import colorSchemes from './colorSchemes'
 
 const defaultColorScheme = 'maeditor'
@@ -213,24 +213,28 @@ function Column(props) {
 
 Window.propTypes = {
   rowData: PropTypes.any.isRequired,
-  height: PropTypes.number.isRequired,
 }
-const SizedWindow = withSize()(function Window(props) {
-  const { rowData, height, size } = props
+function Window(props) {
+  const { rowData } = props
   const elt = Object.keys(rowData)[0]
   return (
-    <List
-      itemCount={rowData[elt].length}
-      itemSize={20}
-      layout="horizontal"
-      width={size.width}
-      height={height}
-      itemData={{ ...props }}
-    >
-      {Column}
-    </List>
+    <Autosizer>
+      {({ height, width }) => (
+        <List
+          className="List"
+          height={height}
+          itemCount={rowData[elt].length}
+          itemSize={20}
+          width={width}
+          layout="horizontal"
+          itemData={{ ...props }}
+        >
+          {Column}
+        </List>
+      )}
+    </Autosizer>
   )
-})
+}
 
 MSARows.propTypes = {
   nodes: PropTypes.any.isRequired,
@@ -254,7 +258,7 @@ function MSARows({
 
   return (
     <div ref={ref} style={style}>
-      <SizedWindow
+      <Window
         ancestorCollapsed={ancestorCollapsed}
         rowData={rowData}
         nodes={nodes}
@@ -588,7 +592,6 @@ function App() {
           'Q5V1W0_HALMA/25-182':
             'TVVVVDQ.FTKHVGT.VQRRGFYPIGSN..PT.IEVATSWD....SVTVLGAVTDNG...DSFF.CWTEENLTRNHGIR.LLEALKDRFGE.................ELVVFLDRAG..YFYARDLWEHVSGERETETVG..............DSSVSCVRGDDLEVWYF.....PSKLPELNAVEGCWDQLQEWFKY..RLVPDISSLK',
         }}
-        height={400}
         root="root"
       />
     </div>
