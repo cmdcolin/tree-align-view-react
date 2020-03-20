@@ -2,7 +2,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
 import './App.css'
 import PropTypes from 'prop-types'
-import { FixedSizeList as List } from 'react-window'
+import { FixedSizeGrid as Grid } from 'react-window'
 import Autosizer from 'react-virtualized-auto-sizer'
 import colorSchemes from './colorSchemes'
 
@@ -180,57 +180,44 @@ function SpeciesNames({
     </div>
   )
 }
-Column.propTypes = {
-  index: PropTypes.number,
-  style: PropTypes.shape({}),
-  data: PropTypes.shape({}),
+Window.propTypes = {
+  rowData: PropTypes.any.isRequired,
+  nodes: PropTypes.any.isRequired,
 }
-function Column(props) {
-  const { index, style, data } = props
-  const { nodes, ancestorCollapsed, colorScheme, rowHeights, rowData } = data
+
+const Cell = props => {
+  const { rowIndex, columnIndex, style, data } = props
+  const { ancestorCollapsed, colorScheme, rowHeights, rowData } = data
+  const nodes = Object.keys(rowData)
+  const letter = rowData[nodes[rowIndex]][columnIndex]
   return (
-    <div style={style}>
-      {nodes.map(node => {
-        return (
-          <div key={node}>
-            {!ancestorCollapsed[node] && rowData[node] ? (
-              <span
-                style={{
-                  color:
-                    colorScheme[rowData[node][index].toUpperCase()] || 'black',
-                  height: rowHeights[node],
-                }}
-              >
-                {rowData[node][index]}
-              </span>
-            ) : null}
-          </div>
-        )
-      })}
+    <div
+      style={{ ...style, color: colorScheme[letter.toUpperCase()] || 'black' }}
+    >
+      {letter}
     </div>
   )
 }
 
-Window.propTypes = {
-  rowData: PropTypes.any.isRequired,
-}
 function Window(props) {
   const { rowData } = props
-  const elt = Object.keys(rowData)[0]
+  const nodes = Object.keys(rowData)
+  const elt = nodes[0]
+
   return (
     <Autosizer>
       {({ height, width }) => (
-        <List
-          className="List"
+        <Grid
+          columnCount={rowData[elt].length}
+          columnWidth={30}
           height={height}
-          itemCount={rowData[elt].length}
-          itemSize={20}
+          rowCount={nodes.length}
+          rowHeight={30}
           width={width}
-          layout="horizontal"
           itemData={{ ...props }}
         >
-          {Column}
-        </List>
+          {Cell}
+        </Grid>
       )}
     </Autosizer>
   )
@@ -243,6 +230,7 @@ MSARows.propTypes = {
   colorScheme: PropTypes.any,
   rowData: PropTypes.any.isRequired,
   rowHeights: PropTypes.any.isRequired,
+  height: PropTypes.any.isRequired,
 }
 
 function MSARows({
@@ -252,6 +240,7 @@ function MSARows({
   rowHeights,
   rowData,
   colorScheme,
+  height,
 }) {
   const ref = useRef()
   const totalHeight = Object.values(rowHeights).reduce((a, b) => a + b, 0)
@@ -263,7 +252,7 @@ function MSARows({
         rowData={rowData}
         nodes={nodes}
         colorScheme={colorScheme}
-        height={totalHeight}
+        height={height}
         rowHeights={rowHeights}
       />
     </div>
@@ -390,55 +379,22 @@ function MSA({
       }}
       ref={ref}
     >
-      <div style={{ height: treeHeight, display: 'flex' }}>
-        <TreeCanvas
-          width={treeWidth}
-          height={treeHeight}
-          branchStrokeStyle={branchStrokeStyle}
-          nodeClicked={node => {
-            collapsed[node] = !collapsed[node]
-            // clone object to trigger re-render
-            setCollapsed({ ...collapsed })
-          }}
-          nodeChildren={nodeChildren}
-          nodes={nodes}
-          nx={nx}
-          ny={ny}
-          ancestorCollapsed={ancestorCollapsed}
-          collapsed={collapsed}
-        />
-
-        <div
-          style={{
-            fontSize: `${nameFontSize}px`,
-            marginLeft: '2px',
-            marginRight: '2px',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          <SpeciesNames
-            colorScheme={colorScheme}
-            rowData={rowData}
-            rowHeights={rowHeights}
-            ancestorCollapsed={ancestorCollapsed}
-            nodes={nodes}
-          />
-        </div>
-        <MSARows
-          style={{
-            fontFamily: charFontName,
-            fontSize: `${genericRowHeight}px`,
-            overflow: 'auto',
-            width: '100%',
-          }}
-          scrollTop={ref.current ? ref.current.scrollTop : 0}
-          colorScheme={colorScheme}
-          rowData={rowData}
-          rowHeights={rowHeights}
-          ancestorCollapsed={ancestorCollapsed}
-          nodes={nodes}
-        />
-      </div>
+      <MSARows
+        style={{
+          fontFamily: charFontName,
+          fontSize: `${genericRowHeight}px`,
+          overflow: 'auto',
+          height: '100%',
+          width: '100%',
+        }}
+        scrollTop={ref.current ? ref.current.scrollTop : 0}
+        colorScheme={colorScheme}
+        rowData={rowData}
+        rowHeights={rowHeights}
+        ancestorCollapsed={ancestorCollapsed}
+        nodes={nodes}
+        height={treeHeight}
+      />
     </div>
   )
 }
