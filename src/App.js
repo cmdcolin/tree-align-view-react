@@ -43,6 +43,7 @@ function TreeCanvas({
   ny,
 }) {
   const treeCanvas = useRef()
+  const [istooltipOn, setTooltip] = useState(false)
 
   const nodesWithHandles = nodes.filter(
     node => !ancestorCollapsed[node] && nodeChildren[node].length
@@ -55,7 +56,7 @@ function TreeCanvas({
     },
     [nodeHandleRadius, nx, ny]
   )
-
+  
   // useEffect+useRef is a conventional way to draw to
   // canvas using React. the ref is a "reference to the canvas DOM element"
   // and the useEffect makes sure to update it when the ref changes and/or
@@ -141,6 +142,37 @@ function TreeCanvas({
         })
         if (clickedNode && nodeClicked) {
           nodeClicked(clickedNode)
+        }
+      }}
+      onMouseMove={evt => {
+        const { clientX, clientY } = evt
+        const mouseX = clientX - treeCanvas.current.getBoundingClientRect().left
+        const mouseY = clientY - treeCanvas.current.getBoundingClientRect().top
+        const ctx = treeCanvas.current.getContext('2d')
+        let FoundNode = null
+        nodesWithHandles.forEach(node => {
+          makeNodeHandlePath(node, ctx)
+          if (ctx.isPointInPath(mouseX, mouseY)) {
+            FoundNode = node
+          }
+        })
+        if (FoundNode && !istooltipOn) {
+          setTooltip(true)
+          let elem = document.createElement('div')
+          elem.id = 'tooltip'
+          elem.style.position = 'absolute'
+          elem.style.left = mouseX+10+'px'
+          elem.style.top = mouseY+10+'px'
+          elem.textContent = FoundNode
+          document.body.appendChild(elem)
+        }else{
+          try{
+            setTooltip(false)
+            let elem = document.getElementById('tooltip')
+            elem.parentNode.removeChild(elem)
+          }catch{
+            setTooltip(false)
+          }
         }
       }}
       width={width}
