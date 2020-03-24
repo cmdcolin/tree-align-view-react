@@ -1,38 +1,76 @@
-export default class Graph {
+export default class Tree {
   constructor() {
-    this.graph = new Map()
+    this.tree = new Map()
     this.extra = new Map()
   }
 
   addVertex(v) {
-    if (!this.graph.has(v)) {
-      this.graph.set(v, [])
-      this.extra.set(v, 0)
+    if (!this.tree.has(v)) {
+      this.tree.set(v, [])
     }
   }
 
   addEdge(v, w) {
-    this.graph.get(v).push(w)
-    this.graph.get(w).push(v)
+    this.tree.get(v).push(w)
   }
 
-  addVertexData(v, data) {
-    this.extra.set(v, data)
+  setVertexExtra(v, prop, data) {
+    if (!this.extra.has(v)) {
+      this.extra.set(v, {})
+    }
+    const extra = this.extra.get(v)
+    extra[prop] = data
+  }
+
+  getChildren(v) {
+    return this.tree.get(v)
+  }
+
+  getVertexExtra(v, prop) {
+    const extra = this.extra.get(v)
+    return extra ? extra[prop] : undefined
+  }
+
+  get maxDistFromRoot() {
+    let currMax = 0
+    this.inOrder('root', node => {
+      currMax = Math.max(currMax, this.getVertexExtra(node, 'length'))
+    })
+    return currMax
+  }
+
+  get nodesInOrder() {
+    const nodes = []
+    this.inOrder('root', node => {
+      nodes.push(node)
+    })
+    return nodes
   }
 
   // eslint-disable-next-line no-console
-  dfs(vert, callback = console.log, visited = {}) {
-    // eslint-disable-next-line no-param-reassign
-    visited[vert] = true
-    callback(vert)
+  inOrder(vert, callback = console.log, parent = undefined) {
+    const ret = this.tree.get(vert)
+    if (!ret) return
+    this.inOrder(ret[1], callback, vert)
+    callback(vert, parent)
+    this.inOrder(ret[0], callback, vert)
+  }
 
-    const neighbors = this.graph.get(vert)
+  // eslint-disable-next-line no-console
+  preOrder(vert, callback = console.log, parent = undefined) {
+    const ret = this.tree.get(vert)
+    if (!ret) return
+    callback(vert, parent)
+    this.preOrder(ret[0], callback, vert)
+    this.preOrder(ret[1], callback, vert)
+  }
 
-    for (let i = 0; i < neighbors.length; i++) {
-      const elem = neighbors[i]
-      if (!visited[elem]) {
-        this.dfs(elem, callback, visited)
-      }
-    }
+  // eslint-disable-next-line no-console
+  postOrder(vert, callback = console.log, parent = undefined) {
+    const ret = this.tree.get(vert)
+    if (!ret) return
+    this.postOrder(ret[0], callback, vert)
+    this.postOrder(ret[1], callback, vert)
+    callback(vert, parent)
   }
 }

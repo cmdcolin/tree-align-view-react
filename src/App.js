@@ -1,11 +1,5 @@
 /* eslint-disable react/forbid-prop-types */
-import React, {
-  useState,
-  useLayoutEffect,
-  useRef,
-  useCallback,
-  useEffect,
-} from 'react'
+import React, { useMemo, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import Graph from './graph'
 import './App.css'
@@ -13,100 +7,54 @@ import colorSchemes from './colorSchemes'
 
 const defaultColorScheme = 'maeditor'
 
-const useRaf = (arg, ms = 1e12, delay = 0) => {
-  const [elapsed, set] = useState(0)
-
-  useLayoutEffect(() => {
-    let raf
-    let timerStop
-    let start
-
-    const onFrame = () => {
-      const time = Math.min(1, (Date.now() - start) / ms)
-      set(time)
-      loop()
-    }
-    const loop = () => {
-      raf = requestAnimationFrame(onFrame)
-    }
-    const onStart = () => {
-      timerStop = setTimeout(() => {
-        cancelAnimationFrame(raf)
-        set(1)
-      }, ms)
-      start = Date.now()
-      loop()
-    }
-    const timerDelay = setTimeout(onStart, delay)
-
-    return () => {
-      clearTimeout(timerStop)
-      clearTimeout(timerDelay)
-      cancelAnimationFrame(raf)
-    }
-  }, [arg, delay, ms])
-
-  return elapsed
-}
-
-const useTween = (arg, ms = 1000, delay = 0) => {
-  const fn = t => t
-  const t = useRaf(arg, ms, delay)
-  return fn(t)
-}
-
 TreeCanvas.propTypes = {
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-  nodes: PropTypes.any.isRequired,
-  branchStrokeStyle: PropTypes.any.isRequired,
+  // optional
   treeStrokeWidth: PropTypes.any,
-  ancestorCollapsed: PropTypes.any.isRequired,
-  rowHeight: PropTypes.number,
-  nodeChildren: PropTypes.any,
+  branchStrokeStyle: PropTypes.string,
   nodeHandleRadius: PropTypes.number,
   rowConnectorDash: PropTypes.any,
   nodeClicked: PropTypes.func,
-  collapsed: PropTypes.any,
-  nx: PropTypes.any,
-  ny: PropTypes.any,
   collapsedNodeHandleFillStyle: PropTypes.string,
   nodeHandleFillStyle: PropTypes.string,
+  // required
+  tree: PropTypes.any.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
 }
 function TreeCanvas({
   width,
   height,
-  nodes,
-  branchStrokeStyle,
+  tree,
+  branchStrokeStyle = 'black',
   treeStrokeWidth = 1,
-  ancestorCollapsed,
   rowConnectorDash = [2, 2],
-  nodeChildren,
-  rowHeight = 24,
   nodeHandleRadius = 4,
-  collapsed,
   collapsedNodeHandleFillStyle = 'white',
   nodeHandleFillStyle = 'black',
   nodeClicked = () => {},
-  nx,
-  ny,
 }) {
-  const [currClick, setCurrClick] = useState()
-  const [wasCollapsed, setWasCollapsed] = useState()
-  const r = useTween(currClick, 100)
-  const animating = r > 0 || r < 1
   const treeCanvas = useRef()
-  const nodesWithHandles = nodes.filter(
-    node => !ancestorCollapsed[node] && nodeChildren[node].length
-  )
 
-  const makeNodeHandlePath = useCallback(
-    (node, ctx) => {
-      ctx.beginPath()
-      ctx.arc(nx[node], ny[node], nodeHandleRadius, 0, 2 * Math.PI)
-    },
-    [nodeHandleRadius, nx, ny]
-  )
+  const position = useMemo(() => {
+    const p = {}
+    let y = 0
+    let x
+    const { maxDistFromRoot } = tree
+    tree.preOrder('root', (node, parent) => {
+      const len = tree.getVertexExtra(node, 'length')
+      const parentDepth = tree.getVertexExtra(parent, 'depth') || 0
+      const depth = parentDepth + len
+      tree.setVertexExtra(node, 'depth', depth)
+    })
+
+    tree.inOrder('root', node => {
+      const depth = tree.getVertexExtra(node, 'depth')
+      x = nodeHandleRadius + treeStrokeWidth + (width * depth) / maxDistFromRoot
+      y += 20
+      p[node] = { x, y }
+    })
+    return p
+  }, [nodeHandleRadius, tree, treeStrokeWidth, width])
 
   // useEffect+useRef is a conventional way to draw to
   // canvas using React. the ref is a "reference to the canvas DOM element"
@@ -118,66 +66,78 @@ function TreeCanvas({
       ctx.clearRect(0, 0, width, height)
       ctx.strokeStyle = branchStrokeStyle
       ctx.lineWidth = treeStrokeWidth
-      nodes.forEach(node => {
-        if (!ancestorCollapsed[node]) {
-          // foot at the end of the phylogenetic tree
-          if (!nodeChildren[node].length) {
-            ctx.setLineDash([])
-            ctx.beginPath()
-            ctx.fillRect(
-              nx[node],
-              ny[node] - nodeHandleRadius,
-              1,
-              2 * nodeHandleRadius
-            )
-          }
-          // lines to the children
-          if (nodeChildren[node].length && !collapsed[node]) {
-            ctx.setLineDash([])
-            nodeChildren[node].forEach(child => {
-              ctx.beginPath()
-              ctx.moveTo(nx[node], ny[node])
-              ctx.lineTo(nx[node], ny[child])
-              ctx.lineTo(nx[child], ny[child])
-              ctx.stroke()
-            })
-          } else {
-            ctx.setLineDash(rowConnectorDash)
-            ctx.beginPath()
-            ctx.moveTo(nx[node], ny[node])
-            ctx.lineTo(width, ny[node])
-            ctx.stroke()
-          }
-        }
-      })
-      nodesWithHandles.forEach(node => {
-        makeNodeHandlePath(node, ctx)
-        if (collapsed[node]) {
-          ctx.fillStyle = collapsedNodeHandleFillStyle
-        } else {
-          ctx.fillStyle = nodeHandleFillStyle
+      tree.preOrder('root', node => {
+        console.log(node, tree.getChildren(node))
+        tree.getChildren(node).forEach(child => {
+          ctx.beginPath()
+          console.log(
+            position[node].x,
+            position[node].y,
+            position[child].x,
+            position[child].y,
+            child
+          )
+          ctx.moveTo(position[node].x, position[node].y)
+          ctx.lineTo(position[node].x, position[child].y)
+          ctx.lineTo(position[child].x, position[child].y)
           ctx.stroke()
-        }
-        ctx.fill()
+        })
       })
     }
+    // nodes.forEach(node => {
+    //   if (!ancestorCollapsed[node]) {
+    //     // foot at the end of the phylogenetic tree
+    //     if (!nodeChildren[node].length) {
+    //       ctx.setLineDash([])
+    //       ctx.beginPath()
+    //       ctx.fillRect(
+    //         nx[node],
+    //         ny[node] - nodeHandleRadius,
+    //         1,
+    //         2 * nodeHandleRadius
+    //       )
+    //     }
+    //     // lines to the children
+    //     if (nodeChildren[node].length && !collapsed[node]) {
+    //       ctx.setLineDash([])
+    //       nodeChildren[node].forEach(child => {
+    //         ctx.beginPath()
+    //         ctx.moveTo(nx[node], ny[node])
+    //         ctx.lineTo(nx[node], ny[child])
+    //         ctx.lineTo(nx[child], ny[child])
+    //         ctx.stroke()
+    //       })
+    //     } else {
+    //       ctx.setLineDash(rowConnectorDash)
+    //       ctx.beginPath()
+    //       ctx.moveTo(nx[node], ny[node])
+    //       ctx.lineTo(width, ny[node])
+    //       ctx.stroke()
+    //     }
+    //   }
+    // })
+    // nodesWithHandles.forEach(node => {
+    //   makeNodeHandlePath(node, ctx)
+    //   if (collapsed[node]) {
+    //     ctx.fillStyle = collapsedNodeHandleFillStyle
+    //   } else {
+    //     ctx.fillStyle = nodeHandleFillStyle
+    //     ctx.stroke()
+    //   }
+    //   ctx.fill()
+    // })
+    // }
   }, [
-    ancestorCollapsed,
     branchStrokeStyle,
     treeStrokeWidth,
     rowConnectorDash,
-    nx,
-    ny,
-    nodes,
     nodeHandleRadius,
-    nodeChildren,
-    collapsed,
-    nodesWithHandles,
     collapsedNodeHandleFillStyle,
     nodeHandleFillStyle,
-    makeNodeHandlePath,
     width,
     height,
+    tree,
+    position,
   ])
 
   return (
@@ -188,20 +148,20 @@ function TreeCanvas({
         const mouseX = clientX - treeCanvas.current.getBoundingClientRect().left
         const mouseY = clientY - treeCanvas.current.getBoundingClientRect().top
         const ctx = treeCanvas.current.getContext('2d')
-        let clickedNode = null
-        nodesWithHandles.forEach(node => {
-          makeNodeHandlePath(node, ctx)
-          if (ctx.isPointInPath(mouseX, mouseY)) {
-            clickedNode = node
-          }
-        })
-        if (clickedNode && nodeClicked) {
-          setCurrClick(clickedNode)
-          setWasCollapsed(collapsed[clickedNode])
-          setTimeout(() => {
-            nodeClicked(clickedNode)
-          }, 100)
-        }
+        const clickedNode = null
+        // nodesWithHandles.forEach(node => {
+        //   makeNodeHandlePath(node, ctx)
+        //   if (ctx.isPointInPath(mouseX, mouseY)) {
+        //     clickedNode = node
+        //   }
+        // })
+        // if (clickedNode && nodeClicked) {
+        //   setCurrClick(clickedNode)
+        //   setWasCollapsed(collapsed[clickedNode])
+        //   setTimeout(() => {
+        //     nodeClicked(clickedNode)
+        //   }, 100)
+        // }
       }}
       width={width}
       height={height}
@@ -211,85 +171,22 @@ function TreeCanvas({
 }
 
 SpeciesNames.propTypes = {
-  nodes: PropTypes.any.isRequired,
-  ancestorCollapsed: PropTypes.any.isRequired,
   colorScheme: PropTypes.any,
-  rowData: PropTypes.any.isRequired,
-  rowHeights: PropTypes.any.isRequired,
+  tree: PropTypes.any.isRequired,
 }
-function SpeciesNames({
-  nodes,
-  ancestorCollapsed,
-  rowHeights,
-  rowData,
-  colorScheme,
-}) {
-  return (
-    <div>
-      {nodes.map(node => {
-        return (
-          <div key={node} style={{ height: rowHeights[node] }}>
-            {!ancestorCollapsed[node] && rowData[node] ? (
-              <span>{node}</span>
-            ) : null}
-          </div>
-        )
-      })}
-    </div>
-  )
+function SpeciesNames({ tree, colorScheme }) {
+  return <div />
 }
 
 MSARows.propTypes = {
-  nodes: PropTypes.any.isRequired,
+  tree: PropTypes.any.isRequired,
   style: PropTypes.any,
-  ancestorCollapsed: PropTypes.any.isRequired,
   colorScheme: PropTypes.any,
-  rowData: PropTypes.any.isRequired,
-  rowHeights: PropTypes.any.isRequired,
 }
-function MSARows({
-  nodes,
-  style = {},
-  ancestorCollapsed,
-  rowHeights,
-  rowData,
-  colorScheme,
-}) {
+function MSARows({ tree, style = {}, colorScheme }) {
   const ref = useRef()
 
-  return (
-    <div ref={ref} style={style}>
-      <div>
-        {nodes.map(node => {
-          return (
-            <div
-              key={node}
-              style={{ height: `${rowHeights[node]}px`, display: 'flex' }}
-            >
-              {!ancestorCollapsed[node] && rowData[node]
-                ? rowData[node].split('').map((c, i) => {
-                    return (
-                      <span
-                        // eslint-disable-next-line react/no-array-index-key
-                        key={`${c}_${i}`}
-                        style={{
-                          color:
-                            colorScheme[c.toUpperCase()] ||
-                            colorScheme.default ||
-                            'black',
-                        }}
-                      >
-                        {c}
-                      </span>
-                    )
-                  })
-                : null}
-            </div>
-          )
-        })}
-      </div>
-    </div>
-  )
+  return <div ref={ref} style={style} />
 }
 
 MSA.propTypes = {
@@ -299,14 +196,15 @@ MSA.propTypes = {
   height: PropTypes.number,
   treeWidth: PropTypes.number,
   nameWidth: PropTypes.number,
-  branchStrokeStyle: PropTypes.string,
   nodeHandleRadius: PropTypes.number,
   nodeHandleFillStyle: PropTypes.string,
   colorScheme: PropTypes.string,
   collapsed: PropTypes.shape({}),
+  charFontName: PropTypes.string,
+  // required
   rowData: PropTypes.shape({}).isRequired,
-  branches: PropTypes.any.isRequired,
   root: PropTypes.string.isRequired,
+  tree: PropTypes.any.isRequired,
 }
 
 function MSA({
@@ -316,74 +214,77 @@ function MSA({
   height: containerHeight = null,
   treeWidth = 200,
   nameWidth = 200,
-  branchStrokeStyle = 'black',
   nodeHandleRadius = 4,
   nodeHandleFillStyle = 'white',
   colorScheme: colorSchemeName = defaultColorScheme,
   collapsed: initialCollapsed = {},
+  charFontName = 'Menlo,monospace',
   root,
   tree,
   rowData,
 }) {
-  const ref = useRef()
-  const [collapsed, setCollapsed] = useState(initialCollapsed)
+  // const [collapsed, setCollapsed] = useState(initialCollapsed)
   const colorScheme = colorSchemes[colorSchemeName]
-  const treeStrokeWidth = 1
-  const availableTreeWidth = treeWidth - nodeHandleRadius - 2 * treeStrokeWidth
-  const charFontName = 'Menlo,monospace'
-  const nodes = []
-  const nodeRank = {}
-  const ancestorCollapsed = {}
-  const distFromRoot = {}
-  let maxDistFromRoot = 0
+  // const treeStrokeWidth = 1
+  // const availableTreeWidth = treeWidth - nodeHandleRadius - 2 * treeStrokeWidth
+  // const nodes = []
+  // const nodeRank = {}
+  // const ancestorCollapsed = {}
+  // const distFromRoot = {}
+  // const maxDistFromRoot = 0
 
-  const addNode = node => {
-    if (!node) {
-      throw new Error('All nodes must be named')
-    }
-    if (nodeRank[node]) {
-      throw new Error(`All node names must be unique (duplicate '${node}')`)
-    }
-    nodeRank[node] = nodes.length
-    nodes.push(node)
-  }
+  // const addNode = node => {
+  //   if (!node) {
+  //     throw new Error('All nodes must be named')
+  //   }
+  //   if (nodeRank[node]) {
+  //     throw new Error(`All node names must be unique (duplicate '${node}')`)
+  //   }
+  //   nodeRank[node] = nodes.length
+  //   nodes.push(node)
+  // }
 
-  const addSubtree = (node, parent) => {
-    distFromRoot[node] =
-      (typeof parent !== 'undefined' ? distFromRoot[parent] : 0) +
-      branchLength[node]
-    maxDistFromRoot = Math.max(maxDistFromRoot, distFromRoot[node])
-    ancestorCollapsed[node] = ancestorCollapsed[parent] || collapsed[parent]
-    const kids = nodeChildren[node]
-    if (kids.length === 2) {
-      addSubtree(kids[0], node)
-      addNode(node)
-      addSubtree(kids[1], node)
-    } else {
-      addNode(node)
-      kids.forEach(child => addSubtree(child, node))
-    }
-  }
-  addSubtree(root)
+  // const addSubtree = (node, parent) => {
+  //   distFromRoot[node] =
+  //     (typeof parent !== 'undefined' ? distFromRoot[parent] : 0) +
+  //     branchLength[node]
+  //   maxDistFromRoot = Math.max(maxDistFromRoot, distFromRoot[node])
+  //   ancestorCollapsed[node] = ancestorCollapsed[parent] || collapsed[parent]
+  //   const kids = nodeChildren[node]
+  //   if (kids.length === 2) {
+  //     addSubtree(kids[0], node)
+  //     addNode(node)
+  //     addSubtree(kids[1], node)
+  //   } else {
+  //     addNode(node)
+  //     kids.forEach(child => addSubtree(child, node))
+  //   }
+  // }
+  // addSubtree(root)
 
   // layout tree
-  const nx = {}
-  const ny = {}
-  const rowHeights = {}
+  // const nx = {}
+  // const ny = {}
+  // const rowHeights = {}
+  // let treeHeight = 0
+  // nodes.forEach(node => {
+  //   const rh =
+  //     ancestorCollapsed[node] ||
+  //     !(rowData[node] || (collapsed[node] && !ancestorCollapsed[node]))
+  //       ? 0
+  //       : genericRowHeight
+  //   nx[node] =
+  //     nodeHandleRadius +
+  //     treeStrokeWidth +
+  //     (availableTreeWidth * distFromRoot[node]) / maxDistFromRoot
+  //   ny[node] = treeHeight + rh / 2
+  //   rowHeights[node] = rh
+  //   treeHeight += rh
+  // })
+
   let treeHeight = 0
-  nodes.forEach(node => {
-    const rh =
-      ancestorCollapsed[node] ||
-      !(rowData[node] || (collapsed[node] && !ancestorCollapsed[node]))
-        ? 0
-        : genericRowHeight
-    nx[node] =
-      nodeHandleRadius +
-      treeStrokeWidth +
-      (availableTreeWidth * distFromRoot[node]) / maxDistFromRoot
-    ny[node] = treeHeight + rh / 2
-    rowHeights[node] = rh
-    treeHeight += rh
+  tree.inOrder('root', () => {
+    treeHeight += 20
   })
 
   return (
@@ -393,24 +294,17 @@ function MSA({
         height: containerHeight || treeHeight,
         overflowY: 'auto',
       }}
-      ref={ref}
     >
       <div style={{ height: treeHeight, display: 'flex' }}>
         <TreeCanvas
           width={treeWidth}
           height={treeHeight}
-          branchStrokeStyle={branchStrokeStyle}
+          tree={tree}
           nodeClicked={node => {
-            collapsed[node] = !collapsed[node]
-            // clone object to trigger re-render
-            setCollapsed({ ...collapsed })
+            // collapsed[node] = !collapsed[node]
+            // // clone object to trigger re-render
+            // setCollapsed({ ...collapsed })
           }}
-          nodeChildren={nodeChildren}
-          nodes={nodes}
-          nx={nx}
-          ny={ny}
-          ancestorCollapsed={ancestorCollapsed}
-          collapsed={collapsed}
         />
 
         <div
@@ -422,31 +316,23 @@ function MSA({
           }}
         >
           <SpeciesNames
+            tree={tree}
             colorScheme={colorScheme}
             rowData={rowData}
-            rowHeights={rowHeights}
-            ancestorCollapsed={ancestorCollapsed}
-            nodes={nodes}
           />
         </div>
         <MSARows
+          tree={tree}
           style={{
             fontFamily: charFontName,
             fontSize: `${genericRowHeight}px`,
             overflow: 'auto',
           }}
-          scrollTop={ref.current ? ref.current.scrollTop : 0}
           colorScheme={colorScheme}
-          rowData={rowData}
-          rowHeights={rowHeights}
-          ancestorCollapsed={ancestorCollapsed}
-          nodes={nodes}
         />
       </div>
     </div>
   )
-
-  // return { element: container }
 }
 function App() {
   const branches = [
@@ -527,9 +413,9 @@ function App() {
     graph.addVertex(branch[0])
     graph.addVertex(branch[1])
     graph.addEdge(branch[0], branch[1])
-    graph.addVertexData(branch[1], branch[2])
+    graph.setVertexExtra(branch[1], 'length', branch[2])
   })
-  graph.dfs('root')
+  graph.setVertexExtra('root', 'length', 0)
   return (
     <MSA
       root="root"
