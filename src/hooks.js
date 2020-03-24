@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from 'react'
+import { useCallback, useState, useLayoutEffect } from 'react'
 
 export const useRaf = (arg, ms = 1e12, delay = 0) => {
   const [elapsed, set] = useState(0)
@@ -40,4 +40,12 @@ export const useTween = (arg, ms = 1000, delay = 0) => {
   const fn = t => t
   const t = useRaf(arg, ms, delay)
   return fn(t)
+}
+
+const incrementParameter = (num: number): number => ++num % 1_000_000
+
+export const useUpdate = () => {
+  const [, setState] = useState(0)
+  // useCallback with empty deps as we only want to define updateCb once
+  return useCallback(() => setState(incrementParameter), [])
 }

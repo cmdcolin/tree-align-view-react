@@ -4,9 +4,13 @@ import PropTypes from 'prop-types'
 import Graph from './graph'
 import './App.css'
 import colorSchemes from './colorSchemes'
+import { useUpdate } from './hooks'
 
 const defaultColorScheme = 'maeditor'
-
+const makeNodeHandlePath = (ctx, x, y, radius) => {
+  ctx.beginPath()
+  ctx.arc(x, y, radius, 0, 2 * Math.PI)
+}
 TreeCanvas.propTypes = {
   // optional
   treeStrokeWidth: PropTypes.any,
@@ -34,6 +38,7 @@ function TreeCanvas({
   nodeClicked = () => {},
 }) {
   const treeCanvas = useRef()
+  const update = useUpdate()
 
   const position = useMemo(() => {
     const p = {}
@@ -67,21 +72,34 @@ function TreeCanvas({
       ctx.strokeStyle = branchStrokeStyle
       ctx.lineWidth = treeStrokeWidth
       tree.preOrder('root', node => {
-        console.log(node, tree.getChildren(node))
-        tree.getChildren(node).forEach(child => {
-          ctx.beginPath()
-          console.log(
+        const collapsed = tree.getVertexExtra(node, 'collapsed')
+
+        const children = tree.getChildren(node)
+        if (children.length) {
+          if (!collapsed) {
+            children.forEach(child => {
+              ctx.beginPath()
+
+              ctx.moveTo(position[node].x, position[node].y)
+              ctx.lineTo(position[node].x, position[child].y)
+              ctx.lineTo(position[child].x, position[child].y)
+              ctx.stroke()
+            })
+          }
+          makeNodeHandlePath(
+            ctx,
             position[node].x,
             position[node].y,
-            position[child].x,
-            position[child].y,
-            child
+            nodeHandleRadius
           )
-          ctx.moveTo(position[node].x, position[node].y)
-          ctx.lineTo(position[node].x, position[child].y)
-          ctx.lineTo(position[child].x, position[child].y)
-          ctx.stroke()
-        })
+          if (tree.getVertexExtra(node, 'collapsed')) {
+            ctx.fillStyle = collapsedNodeHandleFillStyle
+          } else {
+            ctx.fillStyle = nodeHandleFillStyle
+          }
+          ctx.fill()
+        }
+        return collapsed ? -1 : 1
       })
     }
     // nodes.forEach(node => {
@@ -148,20 +166,22 @@ function TreeCanvas({
         const mouseX = clientX - treeCanvas.current.getBoundingClientRect().left
         const mouseY = clientY - treeCanvas.current.getBoundingClientRect().top
         const ctx = treeCanvas.current.getContext('2d')
-        const clickedNode = null
-        // nodesWithHandles.forEach(node => {
-        //   makeNodeHandlePath(node, ctx)
-        //   if (ctx.isPointInPath(mouseX, mouseY)) {
-        //     clickedNode = node
-        //   }
-        // })
-        // if (clickedNode && nodeClicked) {
-        //   setCurrClick(clickedNode)
-        //   setWasCollapsed(collapsed[clickedNode])
-        //   setTimeout(() => {
-        //     nodeClicked(clickedNode)
-        //   }, 100)
-        // }
+        tree.preOrder('root', node => {
+          const children = tree.getChildren(node)
+          if (children.length) {
+            makeNodeHandlePath(
+              ctx,
+              position[node].x,
+              position[node].y,
+              nodeHandleRadius
+            )
+            if (ctx.isPointInPath(mouseX, mouseY)) {
+              const value = tree.getVertexExtra(node, 'collapsed')
+              tree.setVertexExtra(node, 'collapsed', !value)
+              update()
+            }
+          }
+        })
       }}
       width={width}
       height={height}
@@ -286,6 +306,7 @@ function MSA({
   tree.inOrder('root', () => {
     treeHeight += 20
   })
+  treeHeight += 20
 
   return (
     <div

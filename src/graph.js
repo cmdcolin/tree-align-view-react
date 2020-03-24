@@ -60,7 +60,8 @@ export default class Tree {
   preOrder(vert, callback = console.log, parent = undefined) {
     const ret = this.tree.get(vert)
     if (!ret) return
-    callback(vert, parent)
+    const val = callback(vert, parent)
+    if (val === -1) return
     this.preOrder(ret[0], callback, vert)
     this.preOrder(ret[1], callback, vert)
   }
