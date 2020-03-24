@@ -48,12 +48,20 @@ export default class Tree {
   }
 
   // eslint-disable-next-line no-console
-  inOrder(vert, callback = console.log, parent = undefined) {
+  inOrder(
+    vert,
+    callback = console.log,
+    checkCondition = () => {},
+    parent = undefined
+  ) {
     const ret = this.tree.get(vert)
     if (!ret) return
-    this.inOrder(ret[1], callback, vert)
+    const val = checkCondition(vert)
+    console.log(val)
+    if (val === -1) return
+    this.inOrder(ret[1], callback, checkCondition, vert)
     callback(vert, parent)
-    this.inOrder(ret[0], callback, vert)
+    this.inOrder(ret[0], callback, checkCondition, vert)
   }
 
   // eslint-disable-next-line no-console

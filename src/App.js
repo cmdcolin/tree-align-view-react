@@ -1,16 +1,21 @@
 /* eslint-disable react/forbid-prop-types */
-import React, { useMemo, useRef, useEffect } from 'react'
+import React, { useMemo, useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import Graph from './graph'
 import './App.css'
 import colorSchemes from './colorSchemes'
-import { useUpdate } from './hooks'
+import { useUpdate, useTween } from './hooks'
 
-const defaultColorScheme = 'maeditor'
 const makeNodeHandlePath = (ctx, x, y, radius) => {
   ctx.beginPath()
   ctx.arc(x, y, radius, 0, 2 * Math.PI)
 }
+
+const Tree = types.model('Category', {
+  title: types.string,
+  values: types.maybe(types.array(types.late(() => Category))),
+})
+
 TreeCanvas.propTypes = {
   // optional
   treeStrokeWidth: PropTypes.any,
@@ -20,6 +25,7 @@ TreeCanvas.propTypes = {
   nodeClicked: PropTypes.func,
   collapsedNodeHandleFillStyle: PropTypes.string,
   nodeHandleFillStyle: PropTypes.string,
+  tweenTime: PropTypes.number,
   // required
   tree: PropTypes.any.isRequired,
   width: PropTypes.number.isRequired,
@@ -35,31 +41,38 @@ function TreeCanvas({
   nodeHandleRadius = 4,
   collapsedNodeHandleFillStyle = 'white',
   nodeHandleFillStyle = 'black',
+  tweenTime = 500,
   nodeClicked = () => {},
 }) {
+  // const [curr, setCurr] = useState()
+  // const value = useTween(curr, tweenTime)
   const treeCanvas = useRef()
   const update = useUpdate()
 
-  const position = useMemo(() => {
-    const p = {}
-    let y = 0
-    let x
-    const { maxDistFromRoot } = tree
-    tree.preOrder('root', (node, parent) => {
-      const len = tree.getVertexExtra(node, 'length')
-      const parentDepth = tree.getVertexExtra(parent, 'depth') || 0
-      const depth = parentDepth + len
-      tree.setVertexExtra(node, 'depth', depth)
-    })
+  const position = {}
+  let y = 0
+  let x
+  const { maxDistFromRoot } = tree
+  tree.preOrder('root', (node, parent) => {
+    const len = tree.getVertexExtra(node, 'length')
+    const parentDepth = tree.getVertexExtra(parent, 'depth') || 0
+    const depth = parentDepth + len
+    tree.setVertexExtra(node, 'depth', depth)
+  })
 
-    tree.inOrder('root', node => {
+  tree.inOrder(
+    'root',
+    node => {
       const depth = tree.getVertexExtra(node, 'depth')
+
       x = nodeHandleRadius + treeStrokeWidth + (width * depth) / maxDistFromRoot
       y += 20
-      p[node] = { x, y }
-    })
-    return p
-  }, [nodeHandleRadius, tree, treeStrokeWidth, width])
+      position[node] = { x, y }
+    },
+    node => {
+      return tree.getVertexExtra(node, 'collapsed') ? -1 : 1
+    }
+  )
 
   // useEffect+useRef is a conventional way to draw to
   // canvas using React. the ref is a "reference to the canvas DOM element"
@@ -73,7 +86,6 @@ function TreeCanvas({
       ctx.lineWidth = treeStrokeWidth
       tree.preOrder('root', node => {
         const collapsed = tree.getVertexExtra(node, 'collapsed')
-
         const children = tree.getChildren(node)
         if (children.length) {
           if (!collapsed) {
@@ -102,49 +114,6 @@ function TreeCanvas({
         return collapsed ? -1 : 1
       })
     }
-    // nodes.forEach(node => {
-    //   if (!ancestorCollapsed[node]) {
-    //     // foot at the end of the phylogenetic tree
-    //     if (!nodeChildren[node].length) {
-    //       ctx.setLineDash([])
-    //       ctx.beginPath()
-    //       ctx.fillRect(
-    //         nx[node],
-    //         ny[node] - nodeHandleRadius,
-    //         1,
-    //         2 * nodeHandleRadius
-    //       )
-    //     }
-    //     // lines to the children
-    //     if (nodeChildren[node].length && !collapsed[node]) {
-    //       ctx.setLineDash([])
-    //       nodeChildren[node].forEach(child => {
-    //         ctx.beginPath()
-    //         ctx.moveTo(nx[node], ny[node])
-    //         ctx.lineTo(nx[node], ny[child])
-    //         ctx.lineTo(nx[child], ny[child])
-    //         ctx.stroke()
-    //       })
-    //     } else {
-    //       ctx.setLineDash(rowConnectorDash)
-    //       ctx.beginPath()
-    //       ctx.moveTo(nx[node], ny[node])
-    //       ctx.lineTo(width, ny[node])
-    //       ctx.stroke()
-    //     }
-    //   }
-    // })
-    // nodesWithHandles.forEach(node => {
-    //   makeNodeHandlePath(node, ctx)
-    //   if (collapsed[node]) {
-    //     ctx.fillStyle = collapsedNodeHandleFillStyle
-    //   } else {
-    //     ctx.fillStyle = nodeHandleFillStyle
-    //     ctx.stroke()
-    //   }
-    //   ctx.fill()
-    // })
-    // }
   }, [
     branchStrokeStyle,
     treeStrokeWidth,
@@ -176,8 +145,8 @@ function TreeCanvas({
               nodeHandleRadius
             )
             if (ctx.isPointInPath(mouseX, mouseY)) {
-              const value = tree.getVertexExtra(node, 'collapsed')
-              tree.setVertexExtra(node, 'collapsed', !value)
+              const val = tree.getVertexExtra(node, 'collapsed')
+              tree.setVertexExtra(node, 'collapsed', !val)
               update()
             }
           }
@@ -236,7 +205,7 @@ function MSA({
   nameWidth = 200,
   nodeHandleRadius = 4,
   nodeHandleFillStyle = 'white',
-  colorScheme: colorSchemeName = defaultColorScheme,
+  colorScheme: colorSchemeName = 'maeditor',
   collapsed: initialCollapsed = {},
   charFontName = 'Menlo,monospace',
   root,
