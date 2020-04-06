@@ -11,7 +11,6 @@ export function Tree({
   ancestorCollapsed,
   rowConnectorDash = [2, 2],
   nodeChildren,
-  rowHeight = 24,
   nodeHandleRadius = 4,
   collapsed,
   collapsedNodeHandleFillStyle = 'white',
@@ -30,7 +29,6 @@ export function Tree({
   ancestorCollapsed: any
   rowConnectorDash: [number, number]
   nodeChildren: any
-  rowHeight: number
   nodeHandleRadius: number
   collapsed: any
   collapsedNodeHandleFillStyle: string

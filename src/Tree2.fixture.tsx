@@ -84,5 +84,6 @@ export default function Test() {
     tree.setVertexExtra(branch[1], 'length', branch[2])
   })
   tree.setVertexExtra('root', 'length', 0)
-  return <Tree />
+  const data = tree.serialize('root')
+  return <Tree width={200} height={500} tree={data} />
 }

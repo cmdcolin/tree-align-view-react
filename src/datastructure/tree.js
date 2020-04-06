@@ -26,6 +26,9 @@ export default class Tree {
   }
 
   serialize(root) {
+    if (!root) {
+      throw new Error('must specify root')
+    }
     const ret = { ...this.tree.get(root) }
     ret.children = ret.children.map((child) => ({
       name: child,
