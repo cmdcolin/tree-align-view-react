@@ -1,6 +1,7 @@
 import React from 'react'
 import { Tree } from './Tree2'
 import TreeStructure from './datastructure/tree'
+import dfs, { Node } from './datastructure/dfs'
 
 export default function Test() {
   const branches = [
@@ -85,5 +86,25 @@ export default function Test() {
   })
   tree.setVertexExtra('root', 'length', 0)
   const data = tree.serialize('root')
+  const nodeHandleRadius = 4
+  const treeStrokeWidth = 1
+  const width = 100
+  const depth = 100
+  let maxDistFromRoot = 0
+  let y = 0
+
+  dfs(data, (node: Node, parent: Node, context: any) => {
+    node.depth = parent.depth || 0 + node.length
+    maxDistFromRoot = Math.max(maxDistFromRoot, node.depth)
+
+    const x =
+      nodeHandleRadius + treeStrokeWidth + (width * depth) / maxDistFromRoot
+    y += 20
+    node.position = { x, y }
+    if (node.collapsed) {
+      context.cutoff = true
+    }
+  })
+
   return <Tree width={200} height={500} tree={data} />
 }

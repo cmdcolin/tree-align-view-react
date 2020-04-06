@@ -2,43 +2,7 @@
 import React, { useRef, useEffect } from 'react'
 
 import PropTypes from 'prop-types'
-interface Node {
-  x: number
-  y: number
-  collapsed: boolean
-  children: Node[]
-}
 
-function dfs(node: Node, callback: Function) {
-  let cur, par, children
-  const parents = []
-  const nodes = [node]
-
-  for (let i = nodes.length - 1; i >= 0; i--) {
-    parents.push(undefined)
-  }
-
-  while (nodes.length > 0) {
-    cur = nodes.pop()
-    par = parents.pop()
-
-    const ctrl = { stop: false, cutoff: false }
-    callback.call(cur, cur, par, ctrl)
-
-    if (ctrl.stop) {
-      break
-    }
-
-    children = cur && cur.children ? cur.children : []
-
-    for (let i = ctrl.cutoff ? -1 : children.length - 1; i >= 0; i--) {
-      nodes.push(children[i])
-      parents.push(cur)
-    }
-  }
-
-  return node
-}
 export function Tree({
   width,
   height,
@@ -83,6 +47,7 @@ export function Tree({
       if (node.collapsed) {
         control.cutoff = true
       }
+      let curr
       ctx.moveTo(parent.x, parent.y)
       ctx.lineTo(parent.x, node.y)
       ctx.lineTo(node.x, node.y)
@@ -163,18 +128,12 @@ export function Tree({
 Tree.propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  nodes: PropTypes.any.isRequired,
-  branchStrokeStyle: PropTypes.any.isRequired,
+  branchStrokeStyle: PropTypes.any,
   treeStrokeWidth: PropTypes.any,
-  ancestorCollapsed: PropTypes.any.isRequired,
   rowHeight: PropTypes.number,
-  nodeChildren: PropTypes.any,
   nodeHandleRadius: PropTypes.number,
   rowConnectorDash: PropTypes.any,
   nodeClicked: PropTypes.func,
-  collapsed: PropTypes.any,
-  nx: PropTypes.any,
-  ny: PropTypes.any,
   collapsedNodeHandleFillStyle: PropTypes.string,
   nodeHandleFillStyle: PropTypes.string,
 }
