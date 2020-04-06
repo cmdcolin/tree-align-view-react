@@ -84,3 +84,24 @@ test('usage of tree', () => {
   tree.setVertexExtra('root', 'length', 0)
   expect(tree.serialize('root')).toMatchSnapshot()
 })
+
+test('usage of smaller tree', () => {
+  const branches = [
+    ['node26', 'node24', 0.39858],
+    ['node26', 'node22', 0.29225],
+    ['root', 'node26', 0.02808],
+    ['root', 'node25', 0],
+    ['node25', 'node30', 0.10532],
+  ]
+
+  const tree = new Tree()
+  branches.forEach((branch) => {
+    tree.addVertex(branch[0])
+    tree.addVertex(branch[1])
+    tree.addEdge(branch[0], branch[1])
+    tree.setVertexExtra(branch[1], 'length', branch[2])
+  })
+  tree.setVertexExtra('root', 'length', 0)
+  console.log(JSON.stringify(tree.serialize('root'), 0, 2))
+  expect(tree.serialize('root')).toMatchSnapshot()
+})

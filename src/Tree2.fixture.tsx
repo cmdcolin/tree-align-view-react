@@ -93,15 +93,20 @@ export default function Test() {
   let maxDistFromRoot = 0
   let y = 0
 
-  dfs(data, (node: Node, parent: Node, context: any) => {
-    node.depth = parent.depth || 0 + node.length
+  dfs(data, (node: Node, parent: Node | undefined, context: any) => {
+    console.log(node)
+    node.depth = (parent || {}).depth || 0 + node.length
     maxDistFromRoot = Math.max(maxDistFromRoot, node.depth)
-
+  })
+  console.log(maxDistFromRoot)
+  dfs(data, (node: Node, parent: Node | undefined, context: any) => {
     const x =
       nodeHandleRadius + treeStrokeWidth + (width * depth) / maxDistFromRoot
     y += 20
     node.position = { x, y }
+    console.log(node.position)
     if (node.collapsed) {
+      console.log('here')
       context.cutoff = true
     }
   })

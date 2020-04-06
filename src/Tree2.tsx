@@ -2,6 +2,7 @@
 import React, { useRef, useEffect } from 'react'
 
 import PropTypes from 'prop-types'
+import dfs, { Node } from './datastructure/dfs'
 
 export function Tree({
   width,
@@ -47,7 +48,6 @@ export function Tree({
       if (node.collapsed) {
         control.cutoff = true
       }
-      let curr
       ctx.moveTo(parent.x, parent.y)
       ctx.lineTo(parent.x, node.y)
       ctx.lineTo(node.x, node.y)

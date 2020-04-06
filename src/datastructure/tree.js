@@ -5,7 +5,7 @@ export default class Tree {
 
   addVertex(v) {
     if (!this.tree.has(v)) {
-      this.tree.set(v, { children: [] })
+      this.tree.set(v, { children: [], name: v })
     }
   }
 
@@ -30,10 +30,11 @@ export default class Tree {
       throw new Error('must specify root')
     }
     const ret = { ...this.tree.get(root) }
-    ret.children = ret.children.map((child) => ({
-      name: child,
-      children: this.serialize(child),
-    }))
-    return { name: root, ...ret }
+
+    ret.children = ret.children.map((child) => this.serialize(child))
+    if (!ret.children.length) {
+      delete ret.children
+    }
+    return ret
   }
 }
