@@ -52,7 +52,6 @@ function MSARows({
                 ? rowData[node].split('').map((c, i) => {
                     return (
                       <span
-                        // eslint-disable-next-line react/no-array-index-key
                         key={`${c}_${i}`}
                         style={{
                           color:

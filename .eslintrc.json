@@ -29,7 +29,7 @@
     }
   },
   "parserOptions": {
-    "ecmaVersion": 7,
+    "ecmaVersion": 8,
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true,
@@ -38,6 +38,7 @@
   },
   "env": {
     "browser": true,
-    "jest": true
+    "jest": true,
+    "es6": true
   }
 }
