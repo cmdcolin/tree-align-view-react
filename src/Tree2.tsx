@@ -44,15 +44,20 @@ export function Tree({
     }
     ctx.strokeStyle = branchStrokeStyle
     ctx.lineWidth = treeStrokeWidth
-    dfs(tree, (node: Node, parent: Node, control: { cutoff: boolean }) => {
-      if (node.collapsed) {
-        control.cutoff = true
+    dfs(
+      tree,
+      (node: Node, parent: Node | undefined, control: { cutoff: boolean }) => {
+        if (node.collapsed) {
+          control.cutoff = true
+        }
+        const p = parent && parent.position ? parent.position : { x: 0, y: 0 }
+        const q = node.position ? node.position : { x: 0, y: 0 }
+        ctx.moveTo(p.x, p.y)
+        ctx.lineTo(p.x, q.y)
+        ctx.lineTo(q.x, q.y)
+        ctx.stroke()
       }
-      ctx.moveTo(parent.x, parent.y)
-      ctx.lineTo(parent.x, node.y)
-      ctx.lineTo(node.x, node.y)
-      ctx.stroke()
-    })
+    )
     // nodes.forEach((node: any) => {
     //   if (!ancestorCollapsed[node]) {
     //     if (!nodeChildren[node].length) {

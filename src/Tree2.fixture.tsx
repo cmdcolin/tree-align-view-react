@@ -88,28 +88,26 @@ export default function Test() {
   const data = tree.serialize('root')
   const nodeHandleRadius = 4
   const treeStrokeWidth = 1
-  const width = 100
-  const depth = 100
   let maxDistFromRoot = 0
   let y = 0
+  const height = 1000
+  const width = 200
 
-  dfs(data, (node: Node, parent: Node | undefined, context: any) => {
-    console.log(node)
-    node.depth = (parent || {}).depth || 0 + node.length
+  dfs(data, (node: Node, parent: Node | undefined) => {
+    node.depth = ((parent || {}).depth || 0) + node.length
     maxDistFromRoot = Math.max(maxDistFromRoot, node.depth)
   })
-  console.log(maxDistFromRoot)
   dfs(data, (node: Node, parent: Node | undefined, context: any) => {
     const x =
-      nodeHandleRadius + treeStrokeWidth + (width * depth) / maxDistFromRoot
-    y += 20
+      nodeHandleRadius +
+      treeStrokeWidth +
+      (width * (node.depth || 0)) / maxDistFromRoot
+    y += height / branches.length
     node.position = { x, y }
-    console.log(node.position)
     if (node.collapsed) {
-      console.log('here')
       context.cutoff = true
     }
   })
 
-  return <Tree width={200} height={500} tree={data} />
+  return <Tree width={width} height={height} tree={data} />
 }
