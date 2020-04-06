@@ -1,6 +1,6 @@
-import Graph from './graph'
+import Tree from './tree'
 
-test('usage of graph', () => {
+test('usage of tree', () => {
   const branches = [
     ['node1', 'Q112T8_TRIEI/59-200', 0.46854],
     ['node1', 'B7KLQ4_CYAP7/136-277', 0.22403],
@@ -52,16 +52,35 @@ test('usage of graph', () => {
     ['node33', 'Q10V63_TRIEI/166-315', 1.60582],
     ['node20', 'Q9K9X4_BACHD/19-163', 0.71816],
     ['node20', 'node33', 0.27629],
+    ['node21', 'A1WPJ8_VEREI/180-332', 0.49403],
+    ['node21', 'A1VRC2_POLNA/30-181', 0.30377],
+    ['node27', 'node21', 0.14517],
+    ['node27', 'Q01P88_SOLUE/181-333', 0.53324],
+    ['node29', 'node27', 0.52033],
+    ['node29', 'Q8ZSE8_NOSS1/20-198', 0.70812],
+    ['node34', 'A7ILC4_XANP2/116-266', 1.22242],
+    ['node34', 'node29', 1.52935],
+    ['node22', 'node34', 0.189],
+    ['node22', 'node20', 0.05367],
+    ['node23', 'Q5V1W0_HALMA/25-182', 0.97502],
+    ['node23', 'D3T269_NATMM/179-319', 0.40294],
+    ['node24', 'node23', 0.71769],
+    ['node24', 'D2QCC4_SPILD/162-305', 0.84247],
+    ['node26', 'node24', 0.39858],
+    ['node26', 'node22', 0.29225],
+    ['root', 'node26', 0.02808],
+    ['root', 'node25', 0],
+    ['node25', 'node30', 0.10532],
+    ['node25', 'node14', 0.17052],
   ]
 
-  const graph = new Graph()
+  const tree = new Tree()
   branches.forEach((branch) => {
-    graph.addVertex(branch[0])
-    graph.addVertex(branch[1])
-    graph.addEdge(branch[0], branch[1])
-    graph.setVertexExtra(branch[1], 'length', branch[2])
+    tree.addVertex(branch[0])
+    tree.addVertex(branch[1])
+    tree.addEdge(branch[0], branch[1])
+    tree.setVertexExtra(branch[1], 'length', branch[2])
   })
-  graph.addVertex('root')
-  graph.setVertexExtra('root', 'length', 0)
-  expect(JSON.stringify(graph)).toMatchSnapshot()
+  tree.setVertexExtra('root', 'length', 0)
+  expect(tree.serialize('root')).toMatchSnapshot()
 })

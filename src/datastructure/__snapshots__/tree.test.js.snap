@@ -1,0 +1,604 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`usage of tree 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "children": Object {
+        "children": Array [
+          Object {
+            "children": Object {
+              "children": Array [
+                Object {
+                  "children": Object {
+                    "children": Array [
+                      Object {
+                        "children": Object {
+                          "children": Array [],
+                          "length": 0.97502,
+                          "name": "Q5V1W0_HALMA/25-182",
+                        },
+                        "name": "Q5V1W0_HALMA/25-182",
+                      },
+                      Object {
+                        "children": Object {
+                          "children": Array [],
+                          "length": 0.40294,
+                          "name": "D3T269_NATMM/179-319",
+                        },
+                        "name": "D3T269_NATMM/179-319",
+                      },
+                    ],
+                    "length": 0.71769,
+                    "name": "node23",
+                  },
+                  "name": "node23",
+                },
+                Object {
+                  "children": Object {
+                    "children": Array [],
+                    "length": 0.84247,
+                    "name": "D2QCC4_SPILD/162-305",
+                  },
+                  "name": "D2QCC4_SPILD/162-305",
+                },
+              ],
+              "length": 0.39858,
+              "name": "node24",
+            },
+            "name": "node24",
+          },
+          Object {
+            "children": Object {
+              "children": Array [
+                Object {
+                  "children": Object {
+                    "children": Array [
+                      Object {
+                        "children": Object {
+                          "children": Array [],
+                          "length": 1.22242,
+                          "name": "A7ILC4_XANP2/116-266",
+                        },
+                        "name": "A7ILC4_XANP2/116-266",
+                      },
+                      Object {
+                        "children": Object {
+                          "children": Array [
+                            Object {
+                              "children": Object {
+                                "children": Array [
+                                  Object {
+                                    "children": Object {
+                                      "children": Array [
+                                        Object {
+                                          "children": Object {
+                                            "children": Array [],
+                                            "length": 0.49403,
+                                            "name": "A1WPJ8_VEREI/180-332",
+                                          },
+                                          "name": "A1WPJ8_VEREI/180-332",
+                                        },
+                                        Object {
+                                          "children": Object {
+                                            "children": Array [],
+                                            "length": 0.30377,
+                                            "name": "A1VRC2_POLNA/30-181",
+                                          },
+                                          "name": "A1VRC2_POLNA/30-181",
+                                        },
+                                      ],
+                                      "length": 0.14517,
+                                      "name": "node21",
+                                    },
+                                    "name": "node21",
+                                  },
+                                  Object {
+                                    "children": Object {
+                                      "children": Array [],
+                                      "length": 0.53324,
+                                      "name": "Q01P88_SOLUE/181-333",
+                                    },
+                                    "name": "Q01P88_SOLUE/181-333",
+                                  },
+                                ],
+                                "length": 0.52033,
+                                "name": "node27",
+                              },
+                              "name": "node27",
+                            },
+                            Object {
+                              "children": Object {
+                                "children": Array [],
+                                "length": 0.70812,
+                                "name": "Q8ZSE8_NOSS1/20-198",
+                              },
+                              "name": "Q8ZSE8_NOSS1/20-198",
+                            },
+                          ],
+                          "length": 1.52935,
+                          "name": "node29",
+                        },
+                        "name": "node29",
+                      },
+                    ],
+                    "length": 0.189,
+                    "name": "node34",
+                  },
+                  "name": "node34",
+                },
+                Object {
+                  "children": Object {
+                    "children": Array [
+                      Object {
+                        "children": Object {
+                          "children": Array [],
+                          "length": 0.71816,
+                          "name": "Q9K9X4_BACHD/19-163",
+                        },
+                        "name": "Q9K9X4_BACHD/19-163",
+                      },
+                      Object {
+                        "children": Object {
+                          "children": Array [
+                            Object {
+                              "children": Object {
+                                "children": Array [
+                                  Object {
+                                    "children": Object {
+                                      "children": Array [],
+                                      "length": 0.40918,
+                                      "name": "Q6LH76_PHOPR/165-309",
+                                    },
+                                    "name": "Q6LH76_PHOPR/165-309",
+                                  },
+                                  Object {
+                                    "children": Object {
+                                      "children": Array [],
+                                      "length": 0.29264,
+                                      "name": "D3VKI2_XENNA/117-263",
+                                    },
+                                    "name": "D3VKI2_XENNA/117-263",
+                                  },
+                                ],
+                                "length": 0.68671,
+                                "name": "node19",
+                              },
+                              "name": "node19",
+                            },
+                            Object {
+                              "children": Object {
+                                "children": Array [],
+                                "length": 1.60582,
+                                "name": "Q10V63_TRIEI/166-315",
+                              },
+                              "name": "Q10V63_TRIEI/166-315",
+                            },
+                          ],
+                          "length": 0.27629,
+                          "name": "node33",
+                        },
+                        "name": "node33",
+                      },
+                    ],
+                    "length": 0.05367,
+                    "name": "node20",
+                  },
+                  "name": "node20",
+                },
+              ],
+              "length": 0.29225,
+              "name": "node22",
+            },
+            "name": "node22",
+          },
+        ],
+        "length": 0.02808,
+        "name": "node26",
+      },
+      "name": "node26",
+    },
+    Object {
+      "children": Object {
+        "children": Array [
+          Object {
+            "children": Object {
+              "children": Array [
+                Object {
+                  "children": Object {
+                    "children": Array [],
+                    "length": 1.12742,
+                    "name": "A6LRL5_CLOB8/180-328",
+                  },
+                  "name": "A6LRL5_CLOB8/180-328",
+                },
+                Object {
+                  "children": Object {
+                    "children": Array [
+                      Object {
+                        "children": Object {
+                          "children": Array [
+                            Object {
+                              "children": Object {
+                                "children": Array [],
+                                "length": 0.94748,
+                                "name": "Q5P1T1_AROAE/182-325",
+                              },
+                              "name": "Q5P1T1_AROAE/182-325",
+                            },
+                            Object {
+                              "children": Object {
+                                "children": Array [],
+                                "length": 0.39982,
+                                "name": "A1TXP2_MARHV/168-311",
+                              },
+                              "name": "A1TXP2_MARHV/168-311",
+                            },
+                          ],
+                          "length": 0.16594,
+                          "name": "node17",
+                        },
+                        "name": "node17",
+                      },
+                      Object {
+                        "children": Object {
+                          "children": Array [
+                            Object {
+                              "children": Object {
+                                "children": Array [
+                                  Object {
+                                    "children": Object {
+                                      "children": Array [],
+                                      "length": 0.57733,
+                                      "name": "B8F0C4_THASP/172-315",
+                                    },
+                                    "name": "B8F0C4_THASP/172-315",
+                                  },
+                                  Object {
+                                    "children": Object {
+                                      "children": Array [],
+                                      "length": 0.3654,
+                                      "name": "A0R819_PELPD/171-314",
+                                    },
+                                    "name": "A0R819_PELPD/171-314",
+                                  },
+                                ],
+                                "length": 0.16561,
+                                "name": "node15",
+                              },
+                              "name": "node15",
+                            },
+                            Object {
+                              "children": Object {
+                                "children": Array [],
+                                "length": 0.66949,
+                                "name": "Q12BS7_POLSJ/169-312",
+                              },
+                              "name": "Q12BS7_POLSJ/169-312",
+                            },
+                          ],
+                          "length": 0.12196,
+                          "name": "node16",
+                        },
+                        "name": "node16",
+                      },
+                    ],
+                    "length": 0.36768,
+                    "name": "node18",
+                  },
+                  "name": "node18",
+                },
+              ],
+              "length": 0.10532,
+              "name": "node30",
+            },
+            "name": "node30",
+          },
+          Object {
+            "children": Object {
+              "children": Array [
+                Object {
+                  "children": Object {
+                    "children": Array [
+                      Object {
+                        "children": Object {
+                          "children": Array [
+                            Object {
+                              "children": Object {
+                                "children": Array [],
+                                "length": 0.63921,
+                                "name": "B0JUR0_MICAN/39-182",
+                              },
+                              "name": "B0JUR0_MICAN/39-182",
+                            },
+                            Object {
+                              "children": Object {
+                                "children": Array [],
+                                "length": 0.30855,
+                                "name": "A8ZPF4_ACAM1/39-182",
+                              },
+                              "name": "A8ZPF4_ACAM1/39-182",
+                            },
+                          ],
+                          "length": 0.42441,
+                          "name": "node31",
+                        },
+                        "name": "node31",
+                      },
+                      Object {
+                        "children": Object {
+                          "children": Array [],
+                          "length": 0.66539,
+                          "name": "Q2SM05_HAHCH/47-193",
+                        },
+                        "name": "Q2SM05_HAHCH/47-193",
+                      },
+                    ],
+                    "length": 0.79901,
+                    "name": "node28",
+                  },
+                  "name": "node28",
+                },
+                Object {
+                  "children": Object {
+                    "children": Array [
+                      Object {
+                        "children": Object {
+                          "children": Array [
+                            Object {
+                              "children": Object {
+                                "children": Array [],
+                                "length": 0.84978,
+                                "name": "B8FA67_DESAA/174-314",
+                              },
+                              "name": "B8FA67_DESAA/174-314",
+                            },
+                            Object {
+                              "children": Object {
+                                "children": Array [],
+                                "length": 1.04359,
+                                "name": "B2J3A3_NOSP7/183-342",
+                              },
+                              "name": "B2J3A3_NOSP7/183-342",
+                            },
+                          ],
+                          "length": 0.31999,
+                          "name": "node35",
+                        },
+                        "name": "node35",
+                      },
+                      Object {
+                        "children": Object {
+                          "children": Array [
+                            Object {
+                              "children": Object {
+                                "children": Array [
+                                  Object {
+                                    "children": Object {
+                                      "children": Array [],
+                                      "length": 1.41538,
+                                      "name": "B8LZ95_TALSN/146-306",
+                                    },
+                                    "name": "B8LZ95_TALSN/146-306",
+                                  },
+                                  Object {
+                                    "children": Object {
+                                      "children": Array [],
+                                      "length": 2.10673,
+                                      "name": "B3MG73_DROAN/322-472",
+                                    },
+                                    "name": "B3MG73_DROAN/322-472",
+                                  },
+                                ],
+                                "length": 0.534,
+                                "name": "node11",
+                              },
+                              "name": "node11",
+                            },
+                            Object {
+                              "children": Object {
+                                "children": Array [
+                                  Object {
+                                    "children": Object {
+                                      "children": Array [
+                                        Object {
+                                          "children": Object {
+                                            "children": Array [],
+                                            "length": 0.50183,
+                                            "name": "A5CDW1_ORITB/138-276",
+                                          },
+                                          "name": "A5CDW1_ORITB/138-276",
+                                        },
+                                        Object {
+                                          "children": Object {
+                                            "children": Array [
+                                              Object {
+                                                "children": Object {
+                                                  "children": Array [
+                                                    Object {
+                                                      "children": Object {
+                                                        "children": Array [
+                                                          Object {
+                                                            "children": Object {
+                                                              "children": Array [],
+                                                              "length": 0.58897,
+                                                              "name": "B8HLS5_CYAP4/14-156",
+                                                            },
+                                                            "name": "B8HLS5_CYAP4/14-156",
+                                                          },
+                                                          Object {
+                                                            "children": Object {
+                                                              "children": Array [],
+                                                              "length": 0.47743,
+                                                              "name": "B1WNX3_CYAA5/19-161",
+                                                            },
+                                                            "name": "B1WNX3_CYAA5/19-161",
+                                                          },
+                                                        ],
+                                                        "length": 0.22328,
+                                                        "name": "node6",
+                                                      },
+                                                      "name": "node6",
+                                                    },
+                                                    Object {
+                                                      "children": Object {
+                                                        "children": Array [],
+                                                        "length": 0.36091,
+                                                        "name": "Q5P8V6_AROAE/74-216",
+                                                      },
+                                                      "name": "Q5P8V6_AROAE/74-216",
+                                                    },
+                                                  ],
+                                                  "length": 0.14569,
+                                                  "name": "node7",
+                                                },
+                                                "name": "node7",
+                                              },
+                                              Object {
+                                                "children": Object {
+                                                  "children": Array [
+                                                    Object {
+                                                      "children": Object {
+                                                        "children": Array [
+                                                          Object {
+                                                            "children": Object {
+                                                              "children": Array [],
+                                                              "length": 0.49604,
+                                                              "name": "C3KMH7_SINFN/48-190",
+                                                            },
+                                                            "name": "C3KMH7_SINFN/48-190",
+                                                          },
+                                                          Object {
+                                                            "children": Object {
+                                                              "children": Array [],
+                                                              "length": 0.25028,
+                                                              "name": "C1DG58_AZOVD/44-186",
+                                                            },
+                                                            "name": "C1DG58_AZOVD/44-186",
+                                                          },
+                                                        ],
+                                                        "length": 0.06679,
+                                                        "name": "node4",
+                                                      },
+                                                      "name": "node4",
+                                                    },
+                                                    Object {
+                                                      "children": Object {
+                                                        "children": Array [],
+                                                        "length": 0.3309,
+                                                        "name": "Q3SVR1_NITWN/44-186",
+                                                      },
+                                                      "name": "Q3SVR1_NITWN/44-186",
+                                                    },
+                                                  ],
+                                                  "length": 0.20621,
+                                                  "name": "node5",
+                                                },
+                                                "name": "node5",
+                                              },
+                                            ],
+                                            "length": 0.37567,
+                                            "name": "node8",
+                                          },
+                                          "name": "node8",
+                                        },
+                                      ],
+                                      "length": 0.09939,
+                                      "name": "node9",
+                                    },
+                                    "name": "node9",
+                                  },
+                                  Object {
+                                    "children": Object {
+                                      "children": Array [
+                                        Object {
+                                          "children": Object {
+                                            "children": Array [
+                                              Object {
+                                                "children": Object {
+                                                  "children": Array [],
+                                                  "length": 1.40693,
+                                                  "name": "B8M612_TALSN/206-353",
+                                                },
+                                                "name": "B8M612_TALSN/206-353",
+                                              },
+                                              Object {
+                                                "children": Object {
+                                                  "children": Array [],
+                                                  "length": 0.62262,
+                                                  "name": "Q3J777_NITOC/19-161",
+                                                },
+                                                "name": "Q3J777_NITOC/19-161",
+                                              },
+                                            ],
+                                            "length": 0.15499,
+                                            "name": "node2",
+                                          },
+                                          "name": "node2",
+                                        },
+                                        Object {
+                                          "children": Object {
+                                            "children": Array [
+                                              Object {
+                                                "children": Object {
+                                                  "children": Array [],
+                                                  "length": 0.46854,
+                                                  "name": "Q112T8_TRIEI/59-200",
+                                                },
+                                                "name": "Q112T8_TRIEI/59-200",
+                                              },
+                                              Object {
+                                                "children": Object {
+                                                  "children": Array [],
+                                                  "length": 0.22403,
+                                                  "name": "B7KLQ4_CYAP7/136-277",
+                                                },
+                                                "name": "B7KLQ4_CYAP7/136-277",
+                                              },
+                                            ],
+                                            "length": 0.33627,
+                                            "name": "node1",
+                                          },
+                                          "name": "node1",
+                                        },
+                                      ],
+                                      "length": 0.13742,
+                                      "name": "node3",
+                                    },
+                                    "name": "node3",
+                                  },
+                                ],
+                                "length": 0.54887,
+                                "name": "node10",
+                              },
+                              "name": "node10",
+                            },
+                          ],
+                          "length": 0.14564,
+                          "name": "node12",
+                        },
+                        "name": "node12",
+                      },
+                    ],
+                    "length": 0.15953,
+                    "name": "node13",
+                  },
+                  "name": "node13",
+                },
+              ],
+              "length": 0.17052,
+              "name": "node14",
+            },
+            "name": "node14",
+          },
+        ],
+        "length": 0,
+        "name": "node25",
+      },
+      "name": "node25",
+    },
+  ],
+  "length": 0,
+  "name": "root",
+}
+`;

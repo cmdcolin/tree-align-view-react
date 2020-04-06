@@ -1,6 +1,6 @@
 import React from 'react'
 import { Tree } from './Tree'
-import Graph from './graph'
+import Tree from './datastructure/tree'
 
 export default function Test() {
   const branches = [
@@ -76,13 +76,13 @@ export default function Test() {
     ['node25', 'node14', 0.17052],
   ]
 
-  const graph = new Graph()
+  const tree = new Tree()
   branches.forEach((branch) => {
-    graph.addVertex(branch[0])
-    graph.addVertex(branch[1])
-    graph.addEdge(branch[0], branch[1])
-    graph.setVertexExtra(branch[1], 'length', branch[2])
+    tree.addVertex(branch[0])
+    tree.addVertex(branch[1])
+    tree.addEdge(branch[0], branch[1])
+    tree.setVertexExtra(branch[1], 'length', branch[2])
   })
-  graph.setVertexExtra('root', 'length', 0)
+  tree.setVertexExtra('root', 'length', 0)
   return <Tree />
 }
