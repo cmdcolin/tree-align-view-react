@@ -1,34 +1,26 @@
 export default class Tree {
   constructor() {
     this.tree = new Map()
-    this.extra = new Map()
   }
 
   addVertex(v) {
-    if (!this.tree.has(v)) {
-      this.tree.set(v, [])
-    }
+    this.tree.set(v, { children: [] })
   }
 
   addEdge(v, w) {
-    this.tree.get(v).push(w)
+    this.tree.get(v).children.push(w)
   }
 
   setVertexExtra(v, prop, data) {
-    if (!this.extra.has(v)) {
-      this.extra.set(v, {})
-    }
-    const extra = this.extra.get(v)
-    extra[prop] = data
+    this.tree.get(v)[prop] = data
   }
 
   getChildren(v) {
-    return this.tree.get(v)
+    return this.tree.get(v).children
   }
 
   getVertexExtra(v, prop) {
-    const extra = this.extra.get(v)
-    return extra ? extra[prop] : undefined
+    return this.tree.get(v)[prop]
   }
 
   get maxDistFromRoot() {
@@ -39,46 +31,50 @@ export default class Tree {
     return currMax
   }
 
-  get nodesInOrder() {
-    const nodes = []
-    this.inOrder('root', (node) => {
-      nodes.push(node)
-    })
-    return nodes
-  }
+  // get nodesInOrder() {
+  //   const nodes = []
+  //   this.inOrder('root', (node) => {
+  //     nodes.push(node)
+  //   })
+  //   return nodes
+  // }
 
-  inOrder(
-    vert,
-    callback = console.log,
-    checkCondition = () => {
-      /* intentionally blank */
-    },
-    parent = undefined
-  ) {
-    const ret = this.tree.get(vert)
-    if (!ret) return
-    const val = checkCondition(vert)
-    console.log(val)
-    if (val === -1) return
-    this.inOrder(ret[1], callback, checkCondition, vert)
-    callback(vert, parent)
-    this.inOrder(ret[0], callback, checkCondition, vert)
-  }
+  // inOrder(
+  //   vert,
+  //   callback = console.log,
+  //   checkCondition = () => {
+  //     /* intentionally blank */
+  //   },
+  //   parent = undefined
+  // ) {
+  //   const ret = this.tree.get(vert)
+  //   if (!ret) return
+  //   const val = checkCondition(vert)
+  //   console.log(val)
+  //   if (val === -1) return
+  //   this.inOrder(ret[1], callback, checkCondition, vert)
+  //   callback(vert, parent)
+  //   this.inOrder(ret[0], callback, checkCondition, vert)
+  // }
 
-  preOrder(vert, callback = console.log, parent = undefined) {
-    const ret = this.tree.get(vert)
-    if (!ret) return
-    const val = callback(vert, parent)
-    if (val === -1) return
-    this.preOrder(ret[0], callback, vert)
-    this.preOrder(ret[1], callback, vert)
-  }
+  // preOrder(vert, callback = console.log, parent = undefined) {
+  //   const ret = this.tree.get(vert)
+  //   if (!ret) return
+  //   const val = callback(vert, parent)
+  //   if (val === -1) return
+  //   this.preOrder(ret[0], callback, vert)
+  //   this.preOrder(ret[1], callback, vert)
+  // }
 
-  postOrder(vert, callback = console.log, parent = undefined) {
-    const ret = this.tree.get(vert)
-    if (!ret) return
-    this.postOrder(ret[0], callback, vert)
-    this.postOrder(ret[1], callback, vert)
-    callback(vert, parent)
+  // postOrder(vert, callback = console.log, parent = undefined) {
+  //   const ret = this.tree.get(vert)
+  //   if (!ret) return
+  //   this.postOrder(ret[0], callback, vert)
+  //   this.postOrder(ret[1], callback, vert)
+  //   callback(vert, parent)
+  // }
+
+  toJSON(root) {
+    return this.tree.get(root)
   }
 }
