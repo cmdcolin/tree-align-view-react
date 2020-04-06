@@ -1,20 +1,27 @@
 {
   "plugins": [
     "prettier",
-    "react"
+    "react",
+    "@typescript-eslint"
   ],
   "extends": [
-    "airbnb",
-    "react-app",
     "prettier",
     "eslint:recommended",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
+  "parser": "@typescript-eslint/parser",
   "rules": {
-    "prettier/prettier": "error",
-    "curly": "error",
-    "react/require-default-props": 0,
-    "react/jsx-filename-extension": 0
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "semi": false
+      }
+    ],
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/member-delimiter-style": 0
   },
   "settings": {
     "react": {
@@ -28,5 +35,9 @@
       "jsx": true,
       "modules": true
     }
+  },
+  "env": {
+    "browser": true,
+    "jest": true
   }
 }

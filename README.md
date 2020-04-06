@@ -1,28 +1,29 @@
-# tree-align-view-react
+# MSA viewer
 
+MSA viewer with tree component
 
-This is a React-ized version of https://github.com/ihh/tree-align-view/ for demonstration
-
-Please feel free to ask me questions about patterns used here :)
 
 
 ## Install
 
-
-    git clone
     yarn
 
-## Dev server
+
+## Run locally
+
+Use create-react-app to run locally 
 
     yarn start
 
 
-## Lint
+## Cosmos
 
-    yarn lint
+View individual components like the tree and MSA separately
+
+    yarn cosmos
 
 ## Deploy
 
-Coded to go to the homepage in package.json
-
     yarn deploy
+
+
